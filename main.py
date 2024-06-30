@@ -11,13 +11,21 @@ from typing import List
 import httpx
 from dotenv import load_dotenv
 
+# Constants you can play with
 DB_FILE = "pc_play.db"
 CACHE_DIR = "cache"
 OUTPUT_DIR = "output"
-TOKEN_EXPIRY_SECS = 7200
 EPISODES_TO_GET = 10
+M3U_FILENAME = "playlist.m3u"
+TOKEN_EXPIRY_SECS = 7200
+
+# Logging setup
 LOGGER = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
+
+# PocketCasts API Endpoints
+LATEST_EPISODES_API_ENDPOINT = "https://api.pocketcasts.com/user/new_releases"
+LOGIN_URL = "https://api.pocketcasts.com/user/login"
 
 
 @dataclass
@@ -41,9 +49,6 @@ def create_db():
     try:
         conn = sqlite3.connect(DB_FILE)
         c = conn.cursor()
-        c.execute(
-                '''CREATE TABLE IF NOT EXISTS podcasts (id integer PRIMARY KEY AUTOINCREMENT, uuid TEXT, podcast, TEXT, title TEXT, url TEXT, downloaded BOOLEAN DEFAULT FALSE)''')
-        c.execute('''CREATE INDEX pc_uuid_idx on podcasts(uuid);''')
         c.execute('''CREATE TABLE IF NOT EXISTS auth(name TEXT, token TEXT, expires INTEGER)''')
         conn.commit()
         LOGGER.info("DB created")
@@ -72,6 +77,8 @@ def get_token_from_db() -> AuthData:
         conn.close()
 
 
+# noinspection SqlWithoutWhere
+# This is fine here - we want to wipe the table.
 def save_token_to_db(token: str, expires: int) -> bool:
     LOGGER.info("Saving auth token to db")
     conn = sqlite3.connect(DB_FILE)
@@ -90,7 +97,6 @@ def save_token_to_db(token: str, expires: int) -> bool:
 
 def authenticate(username, password) -> str | None:
     LOGGER.info("Authenticating")
-    LOGIN_URL = "https://api.pocketcasts.com/user/login"
 
     login_params = {
         "email":    username,
@@ -130,7 +136,7 @@ def get_latest_episodes(token: str) -> [Podcast | None]:
             "Authorization": f"Bearer {auth_token}",
         }
         try:
-            latest_eps = httpx.post("https://api.pocketcasts.com/user/new_releases", headers=headers).json()
+            latest_eps = httpx.post(LATEST_EPISODES_API_ENDPOINT, headers=headers).json()
             logging.info("Got latest Podcasts")
             top_10 = latest_eps.get('episodes')[:EPISODES_TO_GET]
             logging.debug(f"Got latest episodes {top_10}")
@@ -210,7 +216,7 @@ def clear_output_dir(directory: str):
 
 def copy_pod_to_output_dir(pod: Podcast, output_dir: str, index: int) -> bool:
     try:
-        print(f"Copying {pod.title} to output dir")
+        print(f"Copying: {pod.podcast} - {pod.title} to output dir")
         shutil.copyfile(path.join(CACHE_DIR, pod.uuid),
                         path.join(output_dir,
                                   remove_spaces_from_string(f"{index:03} {pod.podcast} {pod.title}.mp3"))
@@ -219,6 +225,19 @@ def copy_pod_to_output_dir(pod: Podcast, output_dir: str, index: int) -> bool:
     except (FileNotFoundError, OSError) as e:
         LOGGER.error(f"Failed to copy podcast to output dir {e}")
         return False
+
+
+def create_m3u_file(output_dir: str, filename: str):
+    try:
+        with open(path.join(output_dir, filename), "w") as f:
+            f.write("#EXTM3U\n")
+            for output_file in sorted(
+                    pathlib.Path(output_dir).glob("*.mp3")
+            ):
+                f.write(f"{output_file.name}\n")
+    except (FileNotFoundError, OSError, IOError) as e:
+        LOGGER.error(f"Failed to create m3u file {e}")
+        raise SystemExit
 
 
 if __name__ == '__main__':
@@ -276,3 +295,6 @@ if __name__ == '__main__':
         else:
             LOGGER.error(f"Failed to copy {podcast_ep.title} to output dir")
             raise SystemExit
+
+    print("Creating m3u Playlist")
+    create_m3u_file(OUTPUT_DIR, M3U_FILENAME)
