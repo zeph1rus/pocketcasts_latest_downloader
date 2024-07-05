@@ -27,6 +27,7 @@ logging.basicConfig(level=logging.WARNING)
 LATEST_EPISODES_API_ENDPOINT = "https://api.pocketcasts.com/user/new_releases"
 LOGIN_URL = "https://api.pocketcasts.com/user/login"
 
+BANNED_CHARS = [""" """, ",", "*", ":", "!", "?", "$", "@"]
 
 @dataclass
 class AuthData:
@@ -201,7 +202,10 @@ def create_output_dir_if_not_exists(directory: str):
 
 
 def remove_spaces_from_string(s: str) -> str:
-    return s.replace(" ", "_")
+    safer_string = s
+    for banned_char in BANNED_CHARS:
+        safer_string = safer_string.replace(banned_char, "_")
+    return safer_string
 
 
 def clear_output_dir(directory: str):
