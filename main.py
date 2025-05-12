@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 DB_FILE = "pc_play.db"
 CACHE_DIR = "cache"
 OUTPUT_DIR = "output"
-EPISODES_TO_GET = 10
+EPISODES_TO_GET = 20
 M3U_FILENAME = "playlist.m3u"
 TOKEN_EXPIRY_SECS = 7200
 MINIMUM_EPISODE_LENGTH_MINS = 14
@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.WARNING)
 LATEST_EPISODES_API_ENDPOINT = "https://api.pocketcasts.com/user/new_releases"
 LOGIN_URL = "https://api.pocketcasts.com/user/login"
 
-BANNED_CHARS = [""" """, ",", "*", ":", "!", "?", "$", "@"]
+BANNED_CHARS = [""" """, ".",  ",", "*", ":", "!", "?", "$", "@", "(", ")", "/", "\\"]
 
 @dataclass
 class AuthData:
@@ -60,7 +60,9 @@ def create_db():
     try:
         conn = sqlite3.connect(DB_FILE)
         c = conn.cursor()
-        c.execute('''CREATE TABLE IF NOT EXISTS auth(name TEXT, token TEXT, expires INTEGER)''')
+        c.execute(
+            """CREATE TABLE IF NOT EXISTS auth(name TEXT, token TEXT, expires INTEGER)"""
+        )
         conn.commit()
         LOGGER.info("DB created")
     except sqlite3.DatabaseError as e:
