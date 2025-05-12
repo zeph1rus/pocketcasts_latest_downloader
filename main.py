@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from os import path
 from typing import List
-
 import httpx
 from dotenv import load_dotenv
 
@@ -18,6 +17,7 @@ OUTPUT_DIR = "output"
 EPISODES_TO_GET = 10
 M3U_FILENAME = "playlist.m3u"
 TOKEN_EXPIRY_SECS = 7200
+MINIMUM_EPISODE_LENGTH_MINS = 14
 
 # Logging setup
 LOGGER = logging.getLogger(__name__)
@@ -41,6 +41,16 @@ class Podcast:
     title: str
     url: str
     downloaded: bool
+
+
+def is_long_enough(secs: int) -> bool:
+    return secs >= MINIMUM_EPISODE_LENGTH_MINS * 60
+
+
+def filter_length(episode: dict) -> bool:
+    if is_long_enough(episode.get("duration", 0)):
+        return True
+    return False
 
 
 def create_db():
@@ -123,6 +133,7 @@ def authenticate(username, password) -> str | None:
             save_token_to_db(token, expires)
             return token
         except (ValueError, KeyError) as e:
+            LOGGER.error(f"{login_request.content}")
             LOGGER.error(f"Failed to get token {e}")
             return None
     else:
@@ -130,18 +141,25 @@ def authenticate(username, password) -> str | None:
     return None
 
 
-def get_latest_episodes(token: str) -> [Podcast | None]:
+def get_latest_episodes(token: str) -> None | list[None] | list[Podcast]:
     if token:
         headers = {
             "Authorization": f"Bearer {auth_token}",
         }
         try:
+
             latest_eps = httpx.post(LATEST_EPISODES_API_ENDPOINT, headers=headers).json()
             logging.info("Got latest Podcasts")
-            top_10 = latest_eps.get('episodes')[:EPISODES_TO_GET]
-            logging.debug(f"Got latest episodes {top_10}")
+
+            print(f"Got {len(latest_eps.get('episodes', []))} episodes")
+            long_enough_eps = list(filter(filter_length, latest_eps.get("episodes", [])))
+            print(f"Episodes that are long enough: {len(long_enough_eps)}")
+            logging.debug(long_enough_eps)
+            target_episodes = long_enough_eps[:EPISODES_TO_GET]
+            logging.debug(f"Got latest episodes {target_episodes}")
             podcasts = []
-            for ep in top_10:
+            for ep in target_episodes:
+                logging.debug(ep)
                 logging.debug(f"Adding episode {ep.get('title')}")
                 podcasts.append(Podcast(uuid=ep.get("uuid"),
                                         podcast=ep.get("podcastTitle"),
@@ -152,7 +170,7 @@ def get_latest_episodes(token: str) -> [Podcast | None]:
             return podcasts
         except httpx.HTTPError as e:
             LOGGER.error(f"Failed to get latest episodes {e}")
-            return [None]
+    return [None]
 
 
 def get_uuid_in_cache_dir(directory: str) -> List[str | None]:
@@ -241,7 +259,7 @@ def create_m3u_file(output_dir: str, filename: str):
 
 
 if __name__ == '__main__':
-
+    LOGGER.setLevel(logging.ERROR)
     load_dotenv()
     prep_cache_dir(CACHE_DIR)
 
@@ -271,8 +289,7 @@ if __name__ == '__main__':
 
     # Get lastest EPISODES_TO_GET episodes
     latest = get_latest_episodes(auth_token)
-    print("Got latest episodes")
-
+    print(f"Selected newest {EPISODES_TO_GET} episodes")
     # Get list of cached episodes from cache directory
     cached_eps = (get_uuid_in_cache_dir(CACHE_DIR))
 
