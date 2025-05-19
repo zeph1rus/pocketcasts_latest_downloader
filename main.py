@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.WARNING)
 LATEST_EPISODES_API_ENDPOINT = "https://api.pocketcasts.com/user/new_releases"
 LOGIN_URL = "https://api.pocketcasts.com/user/login"
 
-BANNED_CHARS = [""" """, ".",  ",", "*", ":", "!", "?", "$", "@", "(", ")", "/", "\\"]
+BANNED_CHARS = [""" """, ".",  ",", "*", ":", "!", "?", "$", "@", "(", ")", "/", "\\", "'"]
 
 @dataclass
 class AuthData:
@@ -243,7 +243,7 @@ def copy_pod_to_output_dir(pod: Podcast, output_dir: str, index: int) -> bool:
         print(f"Copying: {pod.podcast} - {pod.title} to output dir")
         shutil.copyfile(path.join(CACHE_DIR, pod.uuid),
                         path.join(output_dir,
-                                  remove_spaces_from_string(f"{index:03} {pod.podcast} {pod.title}.mp3"))
+                                  f"{remove_spaces_from_string(f'{index:03} {pod.podcast} {pod.title}')}.MP3")
                         )
         return True
     except (FileNotFoundError, OSError) as e:
