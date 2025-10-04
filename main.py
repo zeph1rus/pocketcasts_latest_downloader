@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 DB_FILE = "pc_play.db"
 CACHE_DIR = "cache"
 OUTPUT_DIR = "output"
-EPISODES_TO_GET = 20
+EPISODES_TO_GET = 30
 M3U_FILENAME = "playlist.m3u"
 TOKEN_EXPIRY_SECS = 7200
 MINIMUM_EPISODE_LENGTH_MINS = 14
@@ -158,7 +158,7 @@ def get_latest_episodes(token: str) -> None | list[None] | list[Podcast]:
             long_enough_eps = list(filter(filter_length, latest_eps.get("episodes", [])))
             print(f"Episodes that are long enough: {len(long_enough_eps)}")
             logging.debug(long_enough_eps)
-            target_episodes = long_enough_eps[:EPISODES_TO_GET]
+            target_episodes = latest_eps.get('episodes')[:EPISODES_TO_GET]
             logging.debug(f"Got latest episodes {target_episodes}")
             podcasts = []
             for ep in target_episodes:
