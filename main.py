@@ -247,7 +247,8 @@ def copy_pod_to_output_dir(pod: Podcast, output_dir: str, index: int) -> bool:
                         path.join(output_dir, filename)
                         )
         with taglib.File(path.join(output_dir, filename), save_on_exit=True) as mp3_file:
-            mp3_file.tags["TITLE"] = f"{index:03}-{pod.podcast}-{pod.title}"
+            print(pod.podcast, pod.title)
+            mp3_file.tags["TITLE"] = f"{index:03}-{pod.title}={pod.podcast}"
             mp3_file.tags["ARTIST"] = pod.podcast
             mp3_file.tags["PCST"] = "1"
             mp3_file.tags["TRCK"] = f"{index:02}"
