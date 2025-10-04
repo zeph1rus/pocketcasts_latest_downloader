@@ -249,10 +249,10 @@ def copy_pod_to_output_dir(pod: Podcast, output_dir: str, index: int) -> bool:
         with taglib.File(path.join(output_dir, filename), save_on_exit=True) as mp3_file:
             print(pod.podcast, pod.title)
             mp3_file.tags["TITLE"] = f"{index:03}-{pod.title}={pod.podcast}"
-            mp3_file.tags["ARTIST"] = pod.podcast
-            mp3_file.tags["PCST"] = "1"
-            mp3_file.tags["TRCK"] = f"{index:02}"
-            mp3_file.tags["TALB"] = "PODCASTS"
+            mp3_file.tags["TOA"] = pod.podcast
+            mp3_file.tags["PCS"] = "1"
+            mp3_file.tags["TRK"] = f"{index:02}"
+            mp3_file.tags["TAL"] = "PODCASTS"
         return True
     except (FileNotFoundError, OSError) as e:
         LOGGER.error(f"Failed to copy podcast to output dir {e}")
