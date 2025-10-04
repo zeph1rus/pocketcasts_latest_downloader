@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from os import path
 from typing import List
 import httpx
+import taglib
 from dotenv import load_dotenv
 
 # Constants you can play with
@@ -240,11 +241,17 @@ def clear_output_dir(directory: str):
 
 def copy_pod_to_output_dir(pod: Podcast, output_dir: str, index: int) -> bool:
     try:
+        filename = f"{remove_spaces_from_string(f'{index:03} {pod.podcast} {pod.title}')}.MP3"
         print(f"Copying: {pod.podcast} - {pod.title} to output dir")
         shutil.copyfile(path.join(CACHE_DIR, pod.uuid),
-                        path.join(output_dir,
-                                  f"{remove_spaces_from_string(f'{index:03} {pod.podcast} {pod.title}')}.MP3")
+                        path.join(output_dir, filename)
                         )
+        with taglib.File(path.join(output_dir, filename), save_on_exit=True) as mp3_file:
+            mp3_file.tags["TITLE"] = f"{index:03}-{pod.podcast}-{pod.title}"
+            mp3_file.tags["ARTIST"] = pod.podcast
+            mp3_file.tags["PCST"] = "1"
+            mp3_file.tags["TRCK"] = f"{index:02}"
+            mp3_file.tags["TALB"] = "PODCASTS"
         return True
     except (FileNotFoundError, OSError) as e:
         LOGGER.error(f"Failed to copy podcast to output dir {e}")
