@@ -6,7 +6,7 @@ import shutil
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from os import path
-from typing import List
+from typing import List, Any
 import httpx
 import taglib
 from dotenv import load_dotenv
@@ -43,6 +43,15 @@ class Podcast:
     title: str
     url: str
     downloaded: bool
+
+@dataclass
+class Episode:
+    uuid: str
+    podcast_uuid: str
+    title: str
+    url: str
+    duration: int
+    number: int
 
 
 def is_long_enough(secs: int) -> bool:
@@ -141,8 +150,35 @@ def authenticate(username, password) -> str | None:
             LOGGER.error(f"Failed to get token {e}")
             return None
     else:
-        logging.error(f"Failed to authenticate {login_request.status_code}, {login_request.text}")
+        LOGGER.error(f"Failed to authenticate {login_request.status_code}, {login_request.text}")
     return None
+
+
+def get_single_podcast_episodes(token: str, uuid: str) -> list[Episode] | None:
+    LOGGER.info("Getting Single podcast episodes")
+    episodes = []
+    api_url = f"https://podcast-api.pocketcasts.com/podcast/full/{uuid}"
+    if token:
+        headers = {
+            "Authorization": f"Bearer {auth_token}",
+        }
+
+        try:
+            eps = httpx.post(api_url, headers=headers).json()
+            if pod := eps.get("podcast"):
+                for e in pod.get("episodes"):
+                    episodes.append(Episode(
+                            uuid=e.get("uuid"),
+                            podcast_uuid=pod.get("uuid"),
+                            title=e.get("title"),
+                            url=e.get("url"),
+                            duration=e.get("duration"),
+                            number=e.get("number"),
+                    ))
+            return episodes
+        except (httpx.HTTPError, ValueError, TypeError) as episodes_error:
+            LOGGER.error(f"{episodes_error}")
+            return episodes
 
 
 def get_latest_episodes(token: str) -> None | list[None] | list[Podcast]:

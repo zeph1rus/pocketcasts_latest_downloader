@@ -8,20 +8,20 @@ This is written to simplify stuffing podcasts onto dumb sports MP3 players, that
 
 ## Requirements
 
-Python 3.10 or later. 
+Python 3.13 or later. 
 
 An understanding of how to run a Python script from the command line.
 
 ## Installation
 
 1. Clone this repository
-2. Install the requirements with `pip install -r requirements.txt` (you should use a virtual environment)
+2. Install UV https://docs.astral.sh/uv/getting-started/installation/
 3. Create a .env file (see example) or set the environment variables in your shell for Username/Password
 
 
 ## Usage
 
-Run the script with `python main.py`
+Run the script with `uv run main.py` - all dependencies will be installed at this point. 
 
 The files and playlist are contained in the `output` folder. This can be changed by editing the script.
 
