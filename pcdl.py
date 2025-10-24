@@ -3,7 +3,7 @@
 By default, will download the latest podcasts from your new releases feed
 
 Usage:
-    pcdl.py [--podcast=PODCAST_UUID] [--retag] [--number=NUMTODL] [ --min-podcast-length MINUTES] [--m3u-filename FILENAME]
+    pcdl.py [--podcast PODCAST_UUID] [--retag] [--number NUMTODL] [ --min-podcast-length MINUTES] [--m3u-filename FILENAME]
     pcdl.py (-h | --help)
 
 Options:
