@@ -1,6 +1,24 @@
+"""Pocketcasts Downloader.
+
+By default, will download the latest podcasts from your new releases feed
+
+Usage:
+    pcdl.py [--podcast=PODCAST_UUID] [--retag] [--number=NUMTODL] [ --min-podcast-length MINUTES] [--m3u-filename FILENAME]
+    pcdl.py (-h | --help)
+
+Options:
+    --podcast PODCAST_UUID           Podcast UUID from Pocketcasts. If this is supplied we will just download the latest podcast from this single podcast
+    --retag                          Rewrite ID3 Tags to allow easier sorting on mp3 players with limited capabilities (format: {sequencen no}-{episode name}) [default: False]
+    --number NUMTODL                 Number of episodes to download [default: 30]
+    --min-podcast-length MINUTES     Only download podcasts longer than this many minutes, to avoid downloading preview episodes etc
+    --m3u-filename FILENAME          Name of the m3u file created in the output directory [default: playlist.m3u]
+    -h --help                        Show this help message
+
+"""
+
 import logging
 import os
-
+import docopt
 from dotenv import load_dotenv
 from auth.auth import authenticate
 from file.cache import get_uuid_in_cache_dir, prep_cache_dir, return_cached_state
@@ -12,23 +30,22 @@ from podcast.pod import get_latest_episodes
 DB_FILE = "pc_play.db"
 CACHE_DIR = "cache"
 OUTPUT_DIR = "output"
-EPISODES_TO_GET = 30
-M3U_FILENAME = "playlist.m3u"
 TOKEN_EXPIRY_SECS = 7200
-MINIMUM_EPISODE_LENGTH_MINS = 14
-FILTER_LENGTH = True
-RETAG_FILES = True
 
 # PocketCasts API Endpoints
 LOGIN_URL = "https://api.pocketcasts.com/user/login"
 
-# noinspection SqlWithoutWhere
-# This is fine here - we want to wipe the table.
-
-
 if __name__ == '__main__':
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
+    cl_args = docopt.docopt(__doc__)
+    print(cl_args)
+
+    min_ep_length = cl_args["--min-podcast-length"]
+    num_to_get = int(cl_args["--number"])
+    m3u_filename = cl_args["--m3u-filename"]
+    podcast_uuid = cl_args["--podcast"]
+    do_retag = cl_args["--retag"]
 
     load_dotenv()
     prep_cache_dir(CACHE_DIR, logger)
@@ -49,11 +66,11 @@ if __name__ == '__main__':
 
     # Get lastest EPISODES_TO_GET episodes
     latest = get_latest_episodes(auth_token,
-                                 FILTER_LENGTH,
-                                 MINIMUM_EPISODE_LENGTH_MINS,
-                                 EPISODES_TO_GET)
+                                 True if min_ep_length else False,
+                                 min_ep_length,
+                                 num_to_get)
 
-    print(f"Selected newest {EPISODES_TO_GET} episodes")
+    print(f"Selected newest {num_to_get} episodes")
     # Get list of cached episodes from cache directory
     cached_eps = (get_uuid_in_cache_dir(CACHE_DIR, logger))
 
@@ -69,7 +86,7 @@ if __name__ == '__main__':
         print(f"Downloading {podcast_ep.podcast} - {podcast_ep.title}")
         download_podcast(podcast_ep, CACHE_DIR)
 
-    copy_files(latest, OUTPUT_DIR, CACHE_DIR, RETAG_FILES)
+    copy_files(latest, OUTPUT_DIR, CACHE_DIR, cl_args.get("--retag"))
 
     print("Creating m3u Playlist")
-    create_m3u_file(OUTPUT_DIR, M3U_FILENAME)
+    create_m3u_file(OUTPUT_DIR, m3u_filename)

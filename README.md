@@ -27,7 +27,26 @@ The files and playlist are contained in the `output` folder. This can be changed
 
 Copy the files from there onto your player.  I've included the script I use as `transfer.sh`
 
-## Configuration
+## Usage
+
+By default, will download the latest podcasts from your new releases feed
+```
+Usage:
+    pcdl.py [--podcast=PODCAST_UUID] [--retag] [--number=NUMTODL] [ --min-podcast-length MINUTES] [--m3u-filename FILENAME]
+    pcdl.py (-h | --help)
+
+Options:
+    --podcast PODCAST_UUID           Podcast UUID from Pocketcasts. If this is supplied we will just 
+                                     download the latest podcasts from this single podcast
+    --retag                          Rewrite ID3 Tags to allow easier sorting on mp3 players with limited capabilities
+                                     (format: {sequencen no}-{episode name}) [default: False]
+    --number NUMTODL                 Number of episodes to download [default: 30]
+    --min-podcast-length MINUTES     Only download podcasts longer than this many minutes, 
+                                     to avoid downloading preview episodes etc
+    --m3u-filename FILENAME          Name of the m3u file created in the output directory [default: playlist.m3u]
+    -h --help                        Show this help message
+
+```
 
 You can change the following constants in the script.
     
@@ -35,7 +54,5 @@ You can change the following constants in the script.
 DB_FILE = "pc_play.db" # The sqlite database file to store the auth token
 CACHE_DIR = "cache" # The cache directory to store the podcast files
 OUTPUT_DIR = "output" # The output directory to store the playlist and files
-EPISODES_TO_GET = 10 # The number of episodes to get
-M3U_FILENAME = "playlist.m3u" # The name of the playlist file
 TOKEN_EXPIRY_SECS = 7200 # The number of seconds the auth token is valid for (2 hours). It will be automatically refreshed
 ```

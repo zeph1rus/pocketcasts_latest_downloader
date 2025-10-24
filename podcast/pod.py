@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 import httpx
 
-from utils.common import filter_length
+from utils.common import filter_length, is_long_enough
 
 LATEST_EPISODES_API_ENDPOINT = "https://api.pocketcasts.com/user/new_releases"
 
@@ -33,7 +33,7 @@ def get_latest_episodes(token: str, filter_on_min_length: bool, min_length: int,
 
             episode_list = latest_eps.get('episodes', [])
 
-            filter_expr = lambda x: filter_length(x.get("duration", 0), min_length)
+            filter_expr = lambda x: is_long_enough(x.get("duration", 0), int(min_length))
 
             if filter_on_min_length:
                 episode_list = list(
@@ -44,7 +44,7 @@ def get_latest_episodes(token: str, filter_on_min_length: bool, min_length: int,
             print(f"Episodes that are long enough: {len(episode_list)}")
             log.debug(episode_list)
 
-            target_episodes = episode_list.get('episodes')[:number_of_episodes]
+            target_episodes = episode_list[:number_of_episodes]
 
             logging.debug(f"Got latest episodes {target_episodes}")
             podcasts = []
