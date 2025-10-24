@@ -8,7 +8,7 @@ This is written to simplify stuffing podcasts onto dumb sports MP3 players, that
 
 ## Requirements
 
-Python 3.13 or later. 
+Python 3.13 or later,  uv python manager
 
 An understanding of how to run a Python script from the command line.
 
@@ -21,7 +21,7 @@ An understanding of how to run a Python script from the command line.
 
 ## Usage
 
-Run the script with `uv run main.py` - all dependencies will be installed at this point. 
+Run the script with `uv run pcdl.py` - all dependencies will be installed at this point.  Please see the Usage section for options
 
 The files and playlist are contained in the `output` folder. This can be changed by editing the script.
 
@@ -42,7 +42,7 @@ Options:
                                      (format: {sequencen no}-{episode name}) [default: False]
     --number NUMTODL                 Number of episodes to download [default: 30]
     --min-podcast-length MINUTES     Only download podcasts longer than this many minutes, 
-                                     to avoid downloading preview episodes etc
+                                     to avoid downloading preview episodes etc.
     --m3u-filename FILENAME          Name of the m3u file created in the output directory [default: playlist.m3u]
     -h --help                        Show this help message
 
@@ -56,3 +56,9 @@ CACHE_DIR = "cache" # The cache directory to store the podcast files
 OUTPUT_DIR = "output" # The output directory to store the playlist and files
 TOKEN_EXPIRY_SECS = 7200 # The number of seconds the auth token is valid for (2 hours). It will be automatically refreshed
 ```
+
+## Troubleshooting
+
+*It downloaded a podcast that wasn't long enough to match the filter* 
+
+This sometimes happens if the podcast has the duration set to 0 in pocketcasts.  Since we don't know how long it is it just gets downloaded.
