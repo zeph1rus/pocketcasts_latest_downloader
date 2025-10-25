@@ -1,7 +1,7 @@
 [project]
 name = "pocketcasts-latest-downloader"
-version = "0.8.1"
-description = "Pocketcasts Episoders downloader"
+version = "0.8.2"
+description = "Pocketcasts Episodes downloader"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
