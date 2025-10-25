@@ -63,7 +63,7 @@ def create_m3u_file(output_dir: str, filename: str):
         with open(path.join(output_dir, filename), "w") as f:
             f.write("#EXTM3U\n")
             for output_file in sorted(
-                    pathlib.Path(output_dir).glob("*.mp3")
+                    pathlib.Path(output_dir).glob("*.mp3", case_sensitive=False),
             ):
                 f.write(f"{output_file.name}\n")
     except (FileNotFoundError, OSError, IOError) as e:

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import httpx
 
 from podcast.pod import Podcast
+from utils.common import is_long_enough
 
 
 @dataclass
@@ -18,7 +19,7 @@ class Episode:
     downloaded: bool = False
 
 
-def get_single_podcast_episodes(token: str, uuid: str) -> list[Episode | None]:
+def get_single_podcast_episodes(token: str, uuid: str, filter_on_min_length: bool, min_length: int, number_of_episodes: int) -> list[Episode | None]:
     log = logging.getLogger(__name__)
     log.info("Getting Single podcast episodes")
     episodes = []
@@ -26,10 +27,18 @@ def get_single_podcast_episodes(token: str, uuid: str) -> list[Episode | None]:
     if token:
         headers = {
             "Authorization": f"Bearer {token}",
+            "Accept":        "application/json",
         }
 
+        filter_expr = lambda x: is_long_enough(x.duration, int(min_length))
+        client = httpx.Client()
+        req = client.build_request(method="GET", url=api_url, headers=headers)
         try:
-            eps = httpx.post(api_url, headers=headers).json()
+            while req is not None:
+                response = client.send(req)
+                req = response.next_request
+
+            eps = response.json()
             if pod := eps.get("podcast"):
                 for e in pod.get("episodes"):
                     episodes.append(Episode(
@@ -41,7 +50,13 @@ def get_single_podcast_episodes(token: str, uuid: str) -> list[Episode | None]:
                             duration=e.get("duration"),
                             number=e.get("number"),
                     ))
-            return episodes
+            print(f"Found {len(episodes)} episodes")
+
+            if filter_on_min_length:
+                episodes = list(filter(filter_expr, episodes))
+                print(f"{len(episodes)} episodes of acceptable duration")
+
+            return episodes[:number_of_episodes]
         except (httpx.HTTPError, ValueError, TypeError) as episodes_error:
             log.error(f"{episodes_error}")
             return episodes

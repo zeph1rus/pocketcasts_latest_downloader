@@ -18,12 +18,15 @@ Options:
 
 import logging
 import os
+
 import docopt
 from dotenv import load_dotenv
+
 from auth.auth import authenticate
 from file.cache import get_uuid_in_cache_dir, prep_cache_dir, return_cached_state
 from file.output import create_m3u_file, copy_files
 from net.download import download_podcast
+from podcast.episodes import get_single_podcast_episodes
 from podcast.pod import get_latest_episodes
 
 # Constants you can play with
@@ -63,14 +66,30 @@ if __name__ == '__main__':
         raise SystemExit
 
     print("Authenticated with PocketCasts")
-
     # Get lastest EPISODES_TO_GET episodes
-    latest = get_latest_episodes(auth_token,
-                                 True if min_ep_length else False,
-                                 min_ep_length,
-                                 num_to_get)
 
-    print(f"Selected newest {num_to_get} episodes")
+    print(podcast_uuid)
+    latest = []
+
+    if podcast_uuid is not None:
+        print(f"Getting latest podcasts from Podcast: {podcast_uuid}")
+        latest = get_single_podcast_episodes(auth_token,
+                                         podcast_uuid,
+                                         True if min_ep_length else False,
+                                         min_ep_length,
+                                         num_to_get)
+
+    else:
+        print("Downloading Latest Podcasts from New Releases")
+        latest = get_latest_episodes(auth_token,
+                                     True if min_ep_length else False,
+                                     min_ep_length,
+                                     num_to_get)
+
+    if latest == []:
+        logger.error("Failed to get episodes")
+        raise SystemExit
+
     # Get list of cached episodes from cache directory
     cached_eps = (get_uuid_in_cache_dir(CACHE_DIR, logger))
 
@@ -89,4 +108,4 @@ if __name__ == '__main__':
     copy_files(latest, OUTPUT_DIR, CACHE_DIR, cl_args.get("--retag"))
 
     print("Creating m3u Playlist")
-    create_m3u_file(OUTPUT_DIR, m3u_filename)
+    create_m3u_file(os.path.realpath(OUTPUT_DIR), m3u_filename)
