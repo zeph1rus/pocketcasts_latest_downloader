@@ -40,15 +40,26 @@ LOGIN_URL = "https://api.pocketcasts.com/user/login"
 
 if __name__ == '__main__':
     logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.WARNING)
     cl_args = docopt.docopt(__doc__)
-    print(cl_args)
+
 
     min_ep_length = cl_args["--min-podcast-length"]
+    if min_ep_length:
+        print(f"Minimum episode length: {min_ep_length}")
+
     num_to_get = int(cl_args["--number"])
+    print(f"Number of episodes to download: {num_to_get}")
+
     m3u_filename = cl_args["--m3u-filename"]
+
     podcast_uuid = cl_args["--podcast"]
+    if podcast_uuid:
+        print(f"Using episodes from Podcast UUID: {podcast_uuid}")
+
     do_retag = cl_args["--retag"]
+    if do_retag:
+        print(f"Episodes will be retagged with new ID3 Tags")
 
     load_dotenv()
     prep_cache_dir(CACHE_DIR, logger)
