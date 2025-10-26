@@ -43,7 +43,6 @@ if __name__ == '__main__':
     logger.setLevel(logging.WARNING)
     cl_args = docopt.docopt(__doc__)
 
-
     min_ep_length = cl_args["--min-podcast-length"]
     if min_ep_length:
         print(f"Minimum episode length: {min_ep_length}")
@@ -77,18 +76,16 @@ if __name__ == '__main__':
         raise SystemExit
 
     print("Authenticated with PocketCasts")
-    # Get lastest EPISODES_TO_GET episodes
 
-    print(podcast_uuid)
     latest = []
 
     if podcast_uuid is not None:
         print(f"Getting latest podcasts from Podcast: {podcast_uuid}")
         latest = get_single_podcast_episodes(auth_token,
-                                         podcast_uuid,
-                                         True if min_ep_length else False,
-                                         min_ep_length,
-                                         num_to_get)
+                                             podcast_uuid,
+                                             True if min_ep_length else False,
+                                             min_ep_length,
+                                             num_to_get)
 
     else:
         print("Downloading Latest Podcasts from New Releases")

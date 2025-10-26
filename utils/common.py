@@ -1,4 +1,4 @@
-BANNED_CHARS = [""" """, ".",  ",", "*", "+","-",":", "!", "?", "$", "@", "(", ")", "/", "\\", "'"]
+BANNED_CHARS = [""" """, ".", ",", "*", "+", "-", ":", "!", "?", "$", "@", "(", ")", "/", "\\", "'"]
 
 
 def remove_spaces_from_string(s: str) -> str:
@@ -12,7 +12,6 @@ def is_long_enough(secs: int, min_length: int) -> bool:
     if secs == 0:
         return True
     return secs >= min_length * 60
-
 
 
 def filter_length(episode: dict, min_length) -> bool:

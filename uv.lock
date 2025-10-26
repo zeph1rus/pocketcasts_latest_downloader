@@ -1,27 +1,32 @@
 version = 1
 revision = 1
 requires-python = ">=3.13"
+resolution-markers = [
+    "sys_platform == 'darwin'",
+    "sys_platform == 'windows'",
+    "sys_platform != 'darwin' and sys_platform != 'windows'",
+]
 
 [[package]]
 name = "anyio"
-version = "4.4.0"
+version = "4.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "idna" },
     { name = "sniffio" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e6/e3/c4c8d473d6780ef1853d630d581f70d655b4f8d7553c6997958c283039a2/anyio-4.4.0.tar.gz", hash = "sha256:5aadc6a1bbb7cdb0bede386cac5e2940f5e2ff3aa20277e991cf028e0585ce94", size = 163930 }
+sdist = { url = "https://files.pythonhosted.org/packages/c6/78/7d432127c41b50bccba979505f272c16cbcadcc33645d5fa3a738110ae75/anyio-4.11.0.tar.gz", hash = "sha256:82a8d0b81e318cc5ce71a5f1f8b5c4e63619620b63141ef8c995fa0db95a57c4", size = 219094 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7b/a2/10639a79341f6c019dedc95bd48a4928eed9f1d1197f4c04f546fc7ae0ff/anyio-4.4.0-py3-none-any.whl", hash = "sha256:c1b2d8f46a8a812513012e1107cb0e68c17159a7a594208005a57dc776e1bdc7", size = 86780 },
+    { url = "https://files.pythonhosted.org/packages/15/b3/9b1a8074496371342ec1e796a96f99c82c945a339cd81a8e73de28b4cf9e/anyio-4.11.0-py3-none-any.whl", hash = "sha256:0287e96f4d26d4149305414d4e3bc32f0dcd0862365a4bddea19d7a1ec38c4fc", size = 109097 },
 ]
 
 [[package]]
 name = "certifi"
-version = "2024.7.4"
+version = "2025.10.5"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c2/02/a95f2b11e207f68bc64d7aae9666fed2e2b3f307748d5123dffb72a1bbea/certifi-2024.7.4.tar.gz", hash = "sha256:5a1e7645bc0ec61a09e26c36f6106dd4cf40c6db3a1fb6352b0244e7fb057c7b", size = 164065 }
+sdist = { url = "https://files.pythonhosted.org/packages/4c/5b/b6ce21586237c77ce67d01dc5507039d444b630dd76611bbca2d8e5dcd91/certifi-2025.10.5.tar.gz", hash = "sha256:47c09d31ccf2acf0be3f701ea53595ee7e0b8fa08801c6624be771df09ae7b43", size = 164519 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1c/d5/c84e1a17bf61d4df64ca866a1c9a913874b4e9bdc131ec689a0ad013fb36/certifi-2024.7.4-py3-none-any.whl", hash = "sha256:c198e21b1289c2ab85ee4e67bb4b4ef3ead0892059901a8d5b622f24a1101e90", size = 162960 },
+    { url = "https://files.pythonhosted.org/packages/e4/37/af0d2ef3967ac0d6113837b44a4f0bfe1328c2b9763bd5b1744520e5cfed/certifi-2025.10.5-py3-none-any.whl", hash = "sha256:0f212c2744a9bb6de0c56639a6f68afe01ecd92d91f14ae897c4fe7bbeeef0de", size = 163286 },
 ]
 
 [[package]]
@@ -57,32 +62,31 @@ wheels = [
 
 [[package]]
 name = "httpx"
-version = "0.27.0"
+version = "0.28.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
     { name = "certifi" },
     { name = "httpcore" },
     { name = "idna" },
-    { name = "sniffio" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5c/2d/3da5bdf4408b8b2800061c339f240c1802f2e82d55e50bd39c5a881f47f0/httpx-0.27.0.tar.gz", hash = "sha256:a0cb88a46f32dc874e04ee956e4c2764aba2aa228f650b06788ba6bda2962ab5", size = 126413 }
+sdist = { url = "https://files.pythonhosted.org/packages/b1/df/48c586a5fe32a0f01324ee087459e112ebb7224f646c0b5023f5e79e9956/httpx-0.28.1.tar.gz", hash = "sha256:75e98c5f16b0f35b567856f597f06ff2270a374470a5c2392242528e3e3e42fc", size = 141406 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/41/7b/ddacf6dcebb42466abd03f368782142baa82e08fc0c1f8eaa05b4bae87d5/httpx-0.27.0-py3-none-any.whl", hash = "sha256:71d5465162c13681bff01ad59b2cc68dd838ea1f10e51574bac27103f00c91a5", size = 75590 },
+    { url = "https://files.pythonhosted.org/packages/2a/39/e50c7c3a983047577ee07d2a9e53faf5a69493943ec3f6a384bdc792deb2/httpx-0.28.1-py3-none-any.whl", hash = "sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad", size = 73517 },
 ]
 
 [[package]]
 name = "idna"
-version = "3.7"
+version = "3.11"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/21/ed/f86a79a07470cb07819390452f178b3bef1d375f2ec021ecfc709fc7cf07/idna-3.7.tar.gz", hash = "sha256:028ff3aadf0609c1fd278d8ea3089299412a7a8b9bd005dd08b9f8285bcb5cfc", size = 189575 }
+sdist = { url = "https://files.pythonhosted.org/packages/6f/6d/0703ccc57f3a7233505399edb88de3cbd678da106337b9fcde432b65ed60/idna-3.11.tar.gz", hash = "sha256:795dafcc9c04ed0c1fb032c2aa73654d8e8c5023a7df64a53f39190ada629902", size = 194582 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e5/3e/741d8c82801c347547f8a2a06aa57dbb1992be9e948df2ea0eda2c8b79e8/idna-3.7-py3-none-any.whl", hash = "sha256:82fee1fc78add43492d3a1898bfa6d8a904cc97d8427f683ed8e798d07761aa0", size = 66836 },
+    { url = "https://files.pythonhosted.org/packages/0e/61/66938bbb5fc52dbdf84594873d5b51fb1f7c7794e9c0f5bd885f30bc507b/idna-3.11-py3-none-any.whl", hash = "sha256:771a87f49d9defaf64091e6e6fe9c18d4833f140bd19464795bc32d966ca37ea", size = 71008 },
 ]
 
 [[package]]
 name = "pocketcasts-latest-downloader"
-version = "0.8.1"
+version = "0.8.2"
 source = { virtual = "." }
 dependencies = [
     { name = "anyio" },
@@ -92,22 +96,23 @@ dependencies = [
     { name = "httpcore" },
     { name = "httpx" },
     { name = "idna" },
-    { name = "pytaglib" },
+    { name = "pytaglib", marker = "sys_platform == 'darwin' or sys_platform == 'windows'" },
     { name = "python-dotenv" },
     { name = "sniffio" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "anyio", specifier = "==4.4.0" },
-    { name = "certifi", specifier = ">=2024.7.4" },
+    { name = "anyio", specifier = "==4.11.0" },
+    { name = "certifi", specifier = "==2025.10.5" },
     { name = "docopt-ng", specifier = ">=0.9.0" },
     { name = "h11", specifier = ">=0.15.0" },
     { name = "httpcore", specifier = "==1.0.9" },
-    { name = "httpx", specifier = "==0.27.0" },
-    { name = "idna", specifier = "==3.7" },
-    { name = "pytaglib", specifier = ">=3.0.1" },
-    { name = "python-dotenv", specifier = "==1.0.1" },
+    { name = "httpx", specifier = "==0.28.1" },
+    { name = "idna", specifier = "==3.11" },
+    { name = "pytaglib", marker = "sys_platform == 'darwin'", specifier = ">=3.0.1" },
+    { name = "pytaglib", marker = "sys_platform == 'windows'", specifier = ">=3.0.1" },
+    { name = "python-dotenv", specifier = "==1.2.1" },
     { name = "sniffio", specifier = "==1.3.1" },
 ]
 
@@ -119,18 +124,15 @@ sdist = { url = "https://files.pythonhosted.org/packages/2a/f5/90d40088d4839b50b
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ba/f8/a2a9eaa79d200f5acf1d8a48b38db042668dc3e67bf56b569b11c5d30349/pytaglib-3.0.1-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:1173675b8868498ed135cc488abfc70bc2016dc78f615a5b27adc042afd3ef9a", size = 765166 },
     { url = "https://files.pythonhosted.org/packages/94/7e/739313be7611fd6f6d18407059255118ff4d09576afeacdd6246c2c98f1e/pytaglib-3.0.1-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:4b56cdbd3c029308634f4efa2134d91f74714eacfb6f43c0ed430fe74fa5cc09", size = 790362 },
-    { url = "https://files.pythonhosted.org/packages/ba/cc/2bf2511ab9a4adbd4eb3cdf35a6ec429e629bf5212d59c50b0ee4de3ede6/pytaglib-3.0.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:041a559015167691b14ac017657e0f7ab5e5398ebe7936dbbcd9940cd4277e24", size = 1932489 },
-    { url = "https://files.pythonhosted.org/packages/b7/89/7c43fbe9f5c89c552ff5ea4bdfdc9e73f343a764d4dca67583ad293dd1f2/pytaglib-3.0.1-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:08e513093a1e3859b6d10319f8dc2509891b0b602b0ed84cad64b59d5e0a87e2", size = 2813214 },
-    { url = "https://files.pythonhosted.org/packages/87/d9/a81226deee5f687edc5e914b7c0a4f1f2cfd1302fb265be37025cf9b352b/pytaglib-3.0.1-cp313-cp313-win_amd64.whl", hash = "sha256:a65f310df7cd78e4218a7bb581da7775192fc81dfcb2612da1ed93091c8671b9", size = 256377 },
 ]
 
 [[package]]
 name = "python-dotenv"
-version = "1.0.1"
+version = "1.2.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/bc/57/e84d88dfe0aec03b7a2d4327012c1627ab5f03652216c63d49846d7a6c58/python-dotenv-1.0.1.tar.gz", hash = "sha256:e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca", size = 39115 }
+sdist = { url = "https://files.pythonhosted.org/packages/f0/26/19cadc79a718c5edbec86fd4919a6b6d3f681039a2f6d66d14be94e75fb9/python_dotenv-1.2.1.tar.gz", hash = "sha256:42667e897e16ab0d66954af0e60a9caa94f0fd4ecf3aaf6d2d260eec1aa36ad6", size = 44221 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6a/3e/b68c118422ec867fa7ab88444e1274aa40681c606d59ac27de5a5588f082/python_dotenv-1.0.1-py3-none-any.whl", hash = "sha256:f7b63ef50f1b690dddf550d03497b66d609393b40b564ed0d674909a68ebf16a", size = 19863 },
+    { url = "https://files.pythonhosted.org/packages/14/1b/a298b06749107c305e1fe0f814c6c74aea7b2f1e10989cb30f544a1b3253/python_dotenv-1.2.1-py3-none-any.whl", hash = "sha256:b81ee9561e9ca4004139c6cbba3a238c32b03e4894671e181b671e8cb8425d61", size = 21230 },
 ]
 
 [[package]]

@@ -69,10 +69,8 @@ This sometimes happens if the podcast has the duration set to 0 in pocketcasts. 
 
 ### Error building on UBUNTU 24, `missing taglib/tstring.h: No such file or directory`
 
-To fix this `apt install libtag1-dev` and then change the version of `pytaglib` in `pyproject.toml` to `"pytaglib==2.0.0"`
+To fix this do `apt install libtag1-dev` 
 
-Then run `uv sync`.
+Then run `uv sync`
 
-This error happens because ubuntu 24 doesn't ship with taglib 2.0, and the pytaglib linux distribution doesn't have binary wheels. 
-
-I'm going to fix this by switching to a different tagging library at some point. 
+This error happens because ubuntu 24 doesn't ship with taglib 2.0, and the pytaglib linux distribution doesn't have binary wheels.  UV should install pytaglib 2 on linux only but it can't automatically install the package.
