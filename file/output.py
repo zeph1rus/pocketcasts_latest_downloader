@@ -17,17 +17,6 @@ def create_output_dir_if_not_exists(directory: str, log: logging.Logger):
         log.error(f"Failed to create output dir {e}")
         raise SystemExit
 
-
-def clear_output_dir(directory: str, log: logging.Logger):
-    try:
-        for output_file in pathlib.Path(directory).glob("*"):
-            if output_file.is_file():
-                output_file.unlink()
-    except (FileNotFoundError, OSError) as e:
-        log.error(f"Failed to clear output dir {e}")
-        raise SystemExit
-
-
 def tag_file(pod: Podcast | Episode, output_dir: str, filename: str, index: int):
     with taglib.File(path.join(output_dir, filename), save_on_exit=True) as mp3_file:
         print(f"Tagging {pod.podcast}, {pod.title}")
@@ -69,22 +58,3 @@ def create_m3u_file(output_dir: str, filename: str):
     except (FileNotFoundError, OSError, IOError) as e:
         log.error(f"Failed to create m3u file {e}")
         raise SystemExit
-
-
-def copy_files(latest: list[Podcast | Episode], output_dir: str, cache_dir: str, retag_files: bool = False):
-    logger = logging.getLogger("__name__")
-    logger.info("Creating output dir")
-
-    clear_output_dir(output_dir, logger)
-    create_output_dir_if_not_exists(output_dir, logger)
-
-    index = 1
-
-    logger.info("Clearing output dir")
-
-    for podcast_ep in latest:
-        if copy_pod_to_output_dir(podcast_ep, output_dir, cache_dir, index, logger, retag_files):
-            index += 1
-        else:
-            logger.error(f"Failed to copy {podcast_ep.title} to output dir")
-            raise SystemExit
