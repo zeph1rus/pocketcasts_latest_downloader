@@ -107,7 +107,7 @@ if __name__ == '__main__':
     cached_eps = (get_uuid_in_cache_dir(CACHE_DIR, logger))
 
     # Check if the latest episodes are already in cache
-    check_if_downloaded = map(lambda x: return_cached_state(x, cached_eps), latest)
+    check_if_downloaded = list(map(lambda x: return_cached_state(x, cached_eps), latest))
 
     # Get the episodes that haven't been downloaded
     to_download = filter(lambda x: not x.downloaded, check_if_downloaded)
