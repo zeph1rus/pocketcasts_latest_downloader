@@ -3,7 +3,7 @@
 By default, will download the latest podcasts from your new releases feed
 
 Usage:
-    pcdl.py [--podcast PODCAST_UUID] [--output PATH] [--retag] [--number NUMTODL] [--min-podcast-length MINUTES] [--m3u-filename FILENAME] [--clear-cache]
+    pcdl.py [--podcast PODCAST_UUID] [--output PATH] [--retag] [--number NUMTODL] [--min-podcast-length MINUTES] [--m3u-filename FILENAME] [--clear-cache] [--clear-out]
     pcdl.py (-h | --help)
 
 Options:
@@ -14,6 +14,7 @@ Options:
     --min-podcast-length MINUTES     Only download podcasts longer than this many minutes, to avoid downloading preview episodes etc
     --m3u-filename FILENAME          Name of the m3u file created in the output directory [default: playlist.m3u]
     --clear-cache                    Clear cache as the files are being copied to the output dir
+    --clear-out                      Clears output dir
     -h --help                        Show this help message
 
 """
@@ -26,7 +27,7 @@ from dotenv import load_dotenv
 
 from auth.auth import authenticate
 from file.cache import get_uuid_in_cache_dir, prep_cache_dir, return_cached_state
-from file.output import create_m3u_file, create_output_dir_if_not_exists, copy_pod_to_output_dir
+from file.output import create_m3u_file, create_output_dir_if_not_exists, copy_pod_to_output_dir, clear_output_dir
 from net.download import download_podcast
 from podcast.episodes import get_single_podcast_episodes
 from podcast.pod import get_latest_episodes
@@ -113,6 +114,10 @@ if __name__ == '__main__':
     # Get the episodes that haven't been downloaded
     to_download = filter(lambda x: not x.downloaded, check_if_downloaded)
     downloaded = filter(lambda x: x.downloaded, check_if_downloaded)
+
+    # Clears output dir
+    if cl_args["--clear-out"]:
+        clear_output_dir(OUTPUT_DIR, logger)
 
     # Copy cached
     for idx, podcast_ep in enumerate(downloaded):

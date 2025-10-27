@@ -17,6 +17,17 @@ def create_output_dir_if_not_exists(directory: str, log: logging.Logger):
         log.error(f"Failed to create output dir {e}")
         raise SystemExit
 
+
+def clear_output_dir(directory: str, log: logging.Logger):
+    try:
+        for output_file in pathlib.Path(directory).glob("*"):
+            if output_file.is_file() and output_file.suffix.lower() in [".mp3", ".m3u"]:
+                log.info(f"Removing file: {output_file}")
+                output_file.unlink()
+    except (FileNotFoundError, OSError) as e:
+        log.error(f"Failed to clear output dir {e}")
+        raise SystemExit
+
 def tag_file(pod: Podcast | Episode, output_dir: str, filename: str, index: int):
     with taglib.File(path.join(output_dir, filename), save_on_exit=True) as mp3_file:
         print(f"Tagging {pod.podcast}, {pod.title}")
