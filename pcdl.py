@@ -3,7 +3,7 @@
 By default, will download the latest podcasts from your new releases feed
 
 Usage:
-    pcdl.py [--podcast PODCAST_UUID] [--output PATH] [--retag] [--number NUMTODL] [--min-podcast-length MINUTES] [--m3u-filename FILENAME]
+    pcdl.py [--podcast PODCAST_UUID] [--output PATH] [--retag] [--number NUMTODL] [--min-podcast-length MINUTES] [--m3u-filename FILENAME] [--clear-cache]
     pcdl.py (-h | --help)
 
 Options:
@@ -13,6 +13,7 @@ Options:
     --number NUMTODL                 Number of episodes to download [default: 30]
     --min-podcast-length MINUTES     Only download podcasts longer than this many minutes, to avoid downloading preview episodes etc
     --m3u-filename FILENAME          Name of the m3u file created in the output directory [default: playlist.m3u]
+    --clear-cache                    Clear cache as the files are being copied to the output dir
     -h --help                        Show this help message
 
 """
@@ -116,14 +117,14 @@ if __name__ == '__main__':
     # Copy cached
     for idx, podcast_ep in enumerate(downloaded):
         logging.info(f"Copying cached episode {podcast_ep.url} from {CACHE_DIR} to {os.path.realpath(OUTPUT_DIR)}")
-        copy_pod_to_output_dir(podcast_ep, OUTPUT_DIR, CACHE_DIR, idx + 1, logger, cl_args.get("--retag"))
+        copy_pod_to_output_dir(podcast_ep, OUTPUT_DIR, CACHE_DIR, idx + 1, logger, cl_args.get("--retag"), cl_args["--clear-cache"])
 
     print("Downloading undownloaded podcasts")
     for idx, podcast_ep in enumerate(to_download):
         logging.info(f"Downloading {podcast_ep.url}")
         print(f"Downloading {podcast_ep.podcast} - {podcast_ep.title}")
         download_podcast(podcast_ep, CACHE_DIR)
-        copy_pod_to_output_dir(podcast_ep, OUTPUT_DIR, CACHE_DIR, idx + 1, logger, cl_args.get("--retag"))
+        copy_pod_to_output_dir(podcast_ep, OUTPUT_DIR, CACHE_DIR, idx + 1, logger, cl_args.get("--retag"), cl_args["--clear-cache"])
 
 
     print("Creating m3u Playlist")

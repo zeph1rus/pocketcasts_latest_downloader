@@ -1,7 +1,7 @@
 import logging
 import pathlib
 import shutil
-from os import path
+from os import path, remove
 
 import taglib
 
@@ -31,7 +31,8 @@ def copy_pod_to_output_dir(pod: Podcast | Episode,
                            output_dir: str,
                            cache_dir: str,
                            index: int, log: logging.Logger,
-                           retag_files: int = False) -> bool:
+                           retag_files: int = False,
+                           clear_cache: bool = False) -> bool:
     try:
         filename = f"{remove_spaces_from_string(f'{index:03} {pod.podcast} {pod.title}')}.MP3"
         print(f"Copying: {pod.podcast} - {pod.title} to output dir")
@@ -40,6 +41,9 @@ def copy_pod_to_output_dir(pod: Podcast | Episode,
                         )
         if retag_files:
             tag_file(pod, output_dir, filename, index)
+        if clear_cache:
+            print(f"Removing: {pod.podcast} - {pod.title} from cache")
+            remove(path.join(cache_dir, pod.uuid))
         return True
     except (FileNotFoundError, OSError) as e:
         log.error(f"Failed to copy podcast to output dir {e}")
